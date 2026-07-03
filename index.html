@@ -4,35 +4,35 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>HR Director Meeting</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=working-final-1" />
 </head>
 <body>
   <header class="topbar">
-    <div class="container topbar-inner">
+    <div class="container topbar__inner">
       <div>
         <div class="brand">HR Governance Portal</div>
-        <div class="subtitle">Director Meeting Record</div>
+        <div class="subbrand">Director Meeting Record</div>
       </div>
-      <div class="secure-pill"><span></span> Secure HR Session</div>
+      <div class="secure"><span></span> Secure HR Session</div>
     </div>
   </header>
 
-  <main class="container">
+  <main class="container main">
     <section class="hero">
-      <div>
+      <div class="hero__copy">
         <p class="eyebrow">Internal HR Meeting</p>
         <h1>Director Duties, Welfare & Grievance Oversight</h1>
-        <p class="hero-text">A structured meeting flow for reviewing director responsibilities, HR oversight, grievances, recruitment authority, transparency and workplace welfare.</p>
+        <p>A structured live question flow for director responsibilities, HR oversight, grievances, recruitment authority, transparency and workplace welfare.</p>
       </div>
-      <div class="session-card">
-        <div class="session-label">Status</div>
-        <div id="meetingStatus" class="session-status idle">Not started</div>
-        <div id="meetingTimer" class="session-timer">00:00</div>
+      <div class="status-card" aria-live="polite">
+        <span class="status-card__label">Status</span>
+        <strong id="meetingStatus">Not started</strong>
+        <span id="meetingTimer">00:00</span>
       </div>
     </section>
 
-    <section class="notice-card">
-      <div class="notice-icon">!</div>
+    <section class="notice">
+      <div class="notice__icon">!</div>
       <div>
         <h2>Before you continue</h2>
         <p>Confirm all participants are aware the meeting may be recorded for internal HR, safeguarding, compliance and quality assurance purposes.</p>
@@ -41,193 +41,248 @@
     </section>
 
     <section class="start-panel" id="startPanel">
-      <button type="button" id="startBtn" class="start-btn">
-        <span class="start-btn-icon">●</span>
-        Start Meeting
+      <button type="button" class="start-btn" id="startBtn">
+        <span class="start-btn__dot"></span>
+        <span id="startBtnText">Start Meeting</span>
       </button>
       <p id="startHelp">Press Start Meeting when all participants are ready.</p>
     </section>
 
-    <section class="live-strip hidden" id="liveStrip" aria-live="polite">
-      <div class="live-dot"></div>
+    <section class="live-banner hidden" id="liveBanner" aria-live="polite">
+      <span class="live-pulse"></span>
       <strong>Meeting On-going</strong>
       <span>This meeting is now live and will be supervised.</span>
     </section>
 
-    <section class="qa-panel hidden" id="qaPanel">
-      <div class="qa-header">
+    <section class="qa hidden" id="qaPanel" aria-label="Live HR Director Questions">
+      <div class="qa__header">
         <div>
           <h2>Live HR Director Questions</h2>
-          <p>Questions appear one at a time. Use the speaker button to read the current question aloud.</p>
+          <p>Questions appear one at a time. Press the speaker icon beside the question to read it aloud.</p>
         </div>
-        <div class="question-count" id="questionCount">Question 1 of 14</div>
+        <span id="questionCount" class="question-count">Question 1 of 14</span>
       </div>
 
       <div class="question-card">
-        <div class="question-row">
-          <h3 id="questionText"></h3>
-          <button type="button" id="speakBtn" class="speak-btn" aria-label="Read question aloud" title="Read question aloud">🔊</button>
+        <div class="question-topline">
+          <h3 id="questionText">Question</h3>
+          <button type="button" class="speaker-btn" id="speakerBtn" aria-label="Read question aloud" title="Read question aloud">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.1-3.8v7.6a4.5 4.5 0 0 0 2.1-3.8zm-2.1-8.1v2.2a7 7 0 0 1 0 11.8v2.2a9 9 0 0 0 0-16.2z"/>
+            </svg>
+          </button>
         </div>
         <p id="questionHint" class="question-hint"></p>
       </div>
 
-      <div class="qa-actions">
-        <button type="button" id="nextBtn" class="next-btn">Next question</button>
+      <div class="qa__actions">
+        <button type="button" class="next-btn" id="nextBtn">Next question</button>
       </div>
 
       <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
         <div id="progressBar"></div>
       </div>
 
-      <div class="tip"><strong>Tip:</strong> Answers should be clear, factual, and supported with examples where possible.</div>
+      <div class="qa__tip"><strong>Tip:</strong> Answers should be clear, factual, and supported with examples where possible.</div>
     </section>
   </main>
 
+  <aside class="camera" id="cameraBox" aria-label="Camera preview">
+    <div class="camera__bar">
+      <strong>Camera preview</strong>
+      <span id="cameraStatus">Off</span>
+    </div>
+    <div class="camera__frame">
+      <video id="cameraVideo" autoplay muted playsinline></video>
+      <div class="camera__placeholder" id="cameraPlaceholder">Camera starts after Start Meeting</div>
+    </div>
+    <p>Local preview only. Browser permission required.</p>
+  </aside>
+
   <footer class="footer">
-    <div class="container">Internal HR Governance Interface</div>
+    <div class="container">Internal HR meeting interface.</div>
   </footer>
 
   <script>
     const questions = [
-      { q: "What are your duties and responsibilities within the company as a Director?", h: "Explain your role clearly and give examples where possible." },
-      { q: "Who reports directly to you and who do you line manage?", h: "Name roles or departments rather than personal details where appropriate." },
-      { q: "Are you aware of any issues, concerns, or challenges faced by employees within the organisation?", h: "Explain how these concerns are brought to your attention." },
-      { q: "Are employee grievances brought directly to you, or are they managed through HR first?", h: "Describe the normal grievance process." },
-      { q: "Do you personally meet employees during grievance meetings, or does HR manage the process on your behalf?", h: "Explain your level of involvement." },
-      { q: "How long have you been acting as Director of the company?", h: "State the approximate date or length of service." },
-      { q: "Were your duties and responsibilities adapted appropriately to accommodate your disability?", h: "Explain any adjustments, support, or delegated responsibilities." },
-      { q: "Do you trust HR to make appropriate decisions regarding employee welfare and workplace concerns?", h: "Explain why and how HR decisions are reviewed." },
-      { q: "Do you believe all employee grievances have been addressed correctly? If yes, please provide an example.", h: "Give a factual example if possible." },
-      { q: "Were you personally involved in decisions relating to grievances raised by employees?", h: "Explain whether decisions were made by you, HR, or management." },
-      { q: "Do you have the final decision-making authority during recruitment, including Skilled Worker recruitment?", h: "Explain how recruitment decisions are approved." },
-      { q: "Is there transparency within the organisation, and are staff members aware of your role and responsibilities? If not, please explain why.", h: "Explain how staff understand reporting lines and decision-making." },
-      { q: "How do you ensure HR decisions are made fairly and in the best interests of employees?", h: "Mention oversight, records, policies, and escalation routes." },
-      { q: "How do you maintain oversight of company operations and ensure managers are carrying out their responsibilities correctly?", h: "Explain supervision, reporting, meetings, audits, or management updates." }
+      {q:"What are your duties and responsibilities within the company as a Director?", h:"Explain your role clearly and give examples where possible."},
+      {q:"Who reports directly to you and who do you line manage?", h:"Name the roles or positions that report to you."},
+      {q:"Are you aware of any issues, concerns, or challenges faced by employees within the organisation?", h:"Give examples if you are aware of any concerns."},
+      {q:"Are employee grievances brought directly to you, or are they managed through HR first?", h:"Explain the normal grievance route within the company."},
+      {q:"Do you personally meet employees during grievance meetings, or does HR manage the process on your behalf?", h:"Explain your involvement in grievance meetings."},
+      {q:"How long have you been acting as Director of the company?", h:"State the length of time and your current level of involvement."},
+      {q:"Were your duties and responsibilities adapted appropriately to accommodate your disability?", h:"Explain what adjustments were made, if any."},
+      {q:"Do you trust HR to make appropriate decisions regarding employee welfare and workplace concerns?", h:"Explain why you trust or rely on HR decisions."},
+      {q:"Do you believe all employee grievances have been addressed correctly? If yes, please provide an example.", h:"Give a clear example where possible."},
+      {q:"Were you personally involved in decisions relating to grievances raised by employees?", h:"Explain your role in decision-making."},
+      {q:"Do you have the final decision-making authority during recruitment, including Skilled Worker recruitment?", h:"Explain how recruitment decisions are approved."},
+      {q:"Is there transparency within the organisation, and are staff members aware of your role and responsibilities? If not, please explain why.", h:"Explain how staff understand the company structure."},
+      {q:"How do you ensure HR decisions are made fairly and in the best interests of employees?", h:"Mention checks, discussions, or oversight methods."},
+      {q:"How do you maintain oversight of company operations and ensure managers are carrying out their responsibilities correctly?", h:"Explain reporting, meetings, records, or review processes."}
     ];
 
-    const startBtn = document.getElementById("startBtn");
-    const startHelp = document.getElementById("startHelp");
-    const startPanel = document.getElementById("startPanel");
-    const liveStrip = document.getElementById("liveStrip");
-    const qaPanel = document.getElementById("qaPanel");
-    const statusEl = document.getElementById("meetingStatus");
-    const timerEl = document.getElementById("meetingTimer");
-    const questionCount = document.getElementById("questionCount");
-    const questionText = document.getElementById("questionText");
-    const questionHint = document.getElementById("questionHint");
-    const speakBtn = document.getElementById("speakBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    const progressBar = document.getElementById("progressBar");
-    const progress = document.querySelector(".progress");
+    const startBtn = document.getElementById('startBtn');
+    const startBtnText = document.getElementById('startBtnText');
+    const startHelp = document.getElementById('startHelp');
+    const statusEl = document.getElementById('meetingStatus');
+    const timerEl = document.getElementById('meetingTimer');
+    const liveBanner = document.getElementById('liveBanner');
+    const qaPanel = document.getElementById('qaPanel');
+    const questionCount = document.getElementById('questionCount');
+    const questionText = document.getElementById('questionText');
+    const questionHint = document.getElementById('questionHint');
+    const speakerBtn = document.getElementById('speakerBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const progressBar = document.getElementById('progressBar');
+    const progress = document.querySelector('.progress');
+    const cameraVideo = document.getElementById('cameraVideo');
+    const cameraStatus = document.getElementById('cameraStatus');
+    const cameraPlaceholder = document.getElementById('cameraPlaceholder');
 
     let idx = 0;
-    let timer = null;
-    let startTime = 0;
-    let voicesReady = false;
+    let started = false;
+    let startedAt = 0;
+    let timerId = null;
+    let audioCtx = null;
+    let camStream = null;
 
-    function pad(n){ return String(n).padStart(2, "0"); }
-    function format(ms){ const s = Math.floor(ms/1000); return pad(Math.floor(s/60)) + ":" + pad(s%60); }
-
-    function loadVoices(){
-      if (!('speechSynthesis' in window)) return;
-      const voices = window.speechSynthesis.getVoices();
-      if (voices.length) voicesReady = true;
+    function pad(n){ return String(n).padStart(2,'0'); }
+    function updateTimer(){
+      const s = Math.floor((Date.now() - startedAt) / 1000);
+      timerEl.textContent = pad(Math.floor(s/60)) + ':' + pad(s%60);
     }
-    if ('speechSynthesis' in window) {
-      loadVoices();
-      window.speechSynthesis.onvoiceschanged = loadVoices;
+
+    function unlockAudio(){
+      try {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (Ctx && !audioCtx) audioCtx = new Ctx();
+        if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+      } catch(e) {}
+    }
+
+    function playMeetingTone(){
+      try {
+        unlockAudio();
+        if (!audioCtx) return;
+        const now = audioCtx.currentTime;
+        [660, 880, 1175].forEach((freq, i) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.0001, now + i * 0.12);
+          gain.gain.exponentialRampToValueAtTime(0.08, now + i * 0.12 + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.12 + 0.14);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + i * 0.12);
+          osc.stop(now + i * 0.12 + 0.16);
+        });
+      } catch(e) {}
     }
 
     function speak(text){
       if (!('speechSynthesis' in window)) {
-        alert("Text-to-speech is not supported by this browser.");
+        alert('Read aloud is not supported in this browser.');
         return;
       }
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "en-GB";
+      utterance.lang = 'en-GB';
       utterance.rate = 0.92;
       utterance.pitch = 1;
       utterance.volume = 1;
       const voices = window.speechSynthesis.getVoices();
-      const preferred = voices.find(v => v.lang === "en-GB") || voices.find(v => v.lang && v.lang.startsWith("en"));
+      const preferred = voices.find(v => /Daniel|Serena|Kate|Samantha|Google UK English/i.test(v.name)) || voices.find(v => /^en-GB/i.test(v.lang)) || voices.find(v => /^en/i.test(v.lang));
       if (preferred) utterance.voice = preferred;
-      setTimeout(() => window.speechSynthesis.speak(utterance), 80);
+      setTimeout(() => window.speechSynthesis.speak(utterance), 40);
     }
 
-    function startTone(){
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+    }
+
+    async function startCamera(){
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        cameraStatus.textContent = 'Unavailable';
+        cameraPlaceholder.textContent = 'Camera not supported in this browser';
+        return;
+      }
       try {
-        const Ctx = window.AudioContext || window.webkitAudioContext;
-        const ctx = new Ctx();
-        const now = ctx.currentTime;
-        [660, 880, 1175].forEach((freq, i) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = "sine";
-          osc.frequency.setValueAtTime(freq, now + i * 0.13);
-          gain.gain.setValueAtTime(0.0001, now + i * 0.13);
-          gain.gain.exponentialRampToValueAtTime(0.08, now + i * 0.13 + 0.02);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.13 + 0.15);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now + i * 0.13);
-          osc.stop(now + i * 0.13 + 0.17);
-        });
-        setTimeout(() => ctx.close(), 850);
-      } catch(e) {}
+        camStream = await navigator.mediaDevices.getUserMedia({video:{width:640,height:480,facingMode:'user'}, audio:false});
+        cameraVideo.srcObject = camStream;
+        cameraStatus.textContent = 'On';
+        cameraStatus.classList.add('on');
+        cameraPlaceholder.classList.add('hidden');
+      } catch (err) {
+        cameraStatus.textContent = 'Blocked';
+        cameraPlaceholder.textContent = 'Camera permission blocked or unavailable';
+      }
     }
 
     function renderQuestion(){
-      const current = questions[idx];
-      questionCount.textContent = "Question " + (idx + 1) + " of " + questions.length;
-      questionText.textContent = current.q;
-      questionHint.textContent = current.h;
+      const item = questions[idx];
+      questionText.textContent = item.q;
+      questionHint.textContent = item.h;
+      questionCount.textContent = 'Question ' + (idx + 1) + ' of ' + questions.length;
       const pct = Math.round(((idx + 1) / questions.length) * 100);
-      progressBar.style.width = pct + "%";
-      progress.setAttribute("aria-valuenow", String(pct));
-      nextBtn.textContent = idx === questions.length - 1 ? "Finish questions" : "Next question";
+      progressBar.style.width = pct + '%';
+      progress.setAttribute('aria-valuenow', String(pct));
+      nextBtn.textContent = idx === questions.length - 1 ? 'Finish questions' : 'Next question';
     }
 
-    startBtn.addEventListener("click", () => {
+    startBtn.addEventListener('click', () => {
+      if (started) return;
+      unlockAudio();
+      started = true;
       startBtn.disabled = true;
-      startBtn.innerHTML = '<span class="start-btn-icon pulse">●</span> Starting meeting...';
-      startHelp.textContent = "Activating meeting mode. Please wait...";
-      statusEl.textContent = "Starting";
-      statusEl.className = "session-status starting";
-      startTone();
+      startBtn.classList.add('starting');
+      startBtnText.textContent = 'Starting meeting...';
+      statusEl.textContent = 'Starting...';
+      statusEl.className = 'starting';
+      startHelp.textContent = 'Activating meeting. Please wait...';
+      startCamera();
 
       setTimeout(() => {
-        statusEl.textContent = "Meeting On-going";
-        statusEl.className = "session-status live";
-        startPanel.classList.add("hidden");
-        liveStrip.classList.remove("hidden");
-        qaPanel.classList.remove("hidden");
-        idx = 0;
+        playMeetingTone();
+        startedAt = Date.now();
+        timerId = setInterval(updateTimer, 250);
+        updateTimer();
+        statusEl.textContent = 'Meeting On-going';
+        statusEl.className = 'live';
+        startBtn.classList.remove('starting');
+        startBtn.classList.add('live');
+        startBtnText.textContent = 'Meeting On-going';
+        startHelp.textContent = 'Meeting is active. Use Next question to continue.';
+        liveBanner.classList.remove('hidden');
+        qaPanel.classList.remove('hidden');
         renderQuestion();
-        startTime = Date.now();
-        timer = setInterval(() => timerEl.textContent = format(Date.now() - startTime), 500);
-        startTone();
-        speak("This meeting is now LIVE and will be supervised.");
-      }, 2500);
+        speak('This meeting is now LIVE and will be supervised.');
+      }, 3000);
     });
 
-    speakBtn.addEventListener("click", () => {
+    speakerBtn.addEventListener('click', () => {
       speak(questions[idx].q);
     });
 
-    nextBtn.addEventListener("click", () => {
+    nextBtn.addEventListener('click', () => {
       if (idx < questions.length - 1) {
         idx++;
         renderQuestion();
       } else {
-        questionCount.textContent = "Completed";
-        questionText.textContent = "Questions completed.";
-        questionHint.textContent = "You may now continue with any additional HR meeting notes or close the meeting record.";
-        speakBtn.style.display = "none";
         nextBtn.disabled = true;
-        nextBtn.textContent = "Finished";
-        progressBar.style.width = "100%";
+        questionCount.textContent = 'Completed';
+        questionText.textContent = 'Questions completed.';
+        questionHint.textContent = 'You may now continue with any closing HR discussion.';
+        progressBar.style.width = '100%';
+        progress.setAttribute('aria-valuenow', '100');
       }
+    });
+
+    window.addEventListener('beforeunload', () => {
+      if (camStream) camStream.getTracks().forEach(t => t.stop());
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      if (timerId) clearInterval(timerId);
     });
   </script>
 </body>
