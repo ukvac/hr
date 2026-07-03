@@ -7,312 +7,228 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header class="app-header">
-    <div class="container app-header__inner">
-      <div class="app-header__brand">HR Governance Portal</div>
-      <div class="app-header__center">Director HR Meeting</div>
-      <div class="app-header__right">Internal HR Record</div>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div>
+        <div class="brand">HR Governance Portal</div>
+        <div class="subtitle">Director Meeting Record</div>
+      </div>
+      <div class="secure-pill"><span></span> Secure HR Session</div>
     </div>
   </header>
 
   <main class="container">
-    <section class="service-name">
-      <div class="service-name__box">
-        <strong class="service-name__text">Director HR Meeting Record</strong>
-      </div>
-    </section>
-
-    <h1>Director HR meeting.</h1>
-    <h2 class="section-heading">Duties, HR oversight, grievances and workplace welfare.</h2>
-
-    <div class="summary">
-      <div class="summary__row">
-        <div class="summary__key">Meeting type</div>
-        <div class="summary__value">Director HR governance review</div>
-      </div>
-      <div class="summary__divider"></div>
-      <div class="summary__row">
-        <div class="summary__key">Purpose</div>
-        <div class="summary__value">Review of director duties, HR oversight, grievances, recruitment authority, transparency and workplace welfare.</div>
-      </div>
-      <div class="summary__divider"></div>
-      <div class="summary__row">
-        <div class="summary__key">Notice</div>
-        <div class="summary__value">This is an internal HR record. It does not create a live connection to UKVI, ACAS, or any external authority.</div>
-      </div>
-    </div>
-
-    <div class="warning">
-      <div class="warning__icon">!</div>
+    <section class="hero">
       <div>
-        <h3 class="warning__title">Before you continue</h3>
-        <p class="warning__text">Confirm all participants are aware the meeting may be recorded for internal HR, safeguarding, compliance and quality assurance purposes.</p>
+        <p class="eyebrow">Internal HR Meeting</p>
+        <h1>Director Duties, Welfare & Grievance Oversight</h1>
+        <p class="hero-text">A structured meeting flow for reviewing director responsibilities, HR oversight, grievances, recruitment authority, transparency and workplace welfare.</p>
       </div>
-    </div>
-
-    <section class="meeting-start" id="meetingStartPanel" aria-label="Start meeting control">
-      <button type="button" id="startMeetingBtn" class="start-meeting-btn">Start Meeting</button>
-      <div class="meeting-status meeting-status--hidden" id="meetingStatus" aria-live="polite">
-        <span class="meeting-status__dot"></span>
-        <strong>Meeting On-going</strong>
-        <span id="meetingTimer">00:00</span>
+      <div class="session-card">
+        <div class="session-label">Status</div>
+        <div id="meetingStatus" class="session-status idle">Not started</div>
+        <div id="meetingTimer" class="session-timer">00:00</div>
       </div>
-      <p class="meeting-start__hint" id="startHint">Press Start Meeting when all participants are ready.</p>
     </section>
 
-    <section class="qa qa--locked" id="qaPanel" aria-label="Live HR director questions">
-      <div class="qa__header">
-        <h3 class="qa__title">Live HR Director Questions</h3>
-        <p class="qa__subtitle">Questions appear one at a time. Press the speaker icon beside the question to read it aloud.</p>
+    <section class="notice-card">
+      <div class="notice-icon">!</div>
+      <div>
+        <h2>Before you continue</h2>
+        <p>Confirm all participants are aware the meeting may be recorded for internal HR, safeguarding, compliance and quality assurance purposes.</p>
+        <p class="muted">This page is an internal HR record interface and does not create a live connection to UKVI, ACAS, or any external authority.</p>
       </div>
-
-      <div class="qa__body">
-        <div class="live-banner live-banner--hidden" id="liveBanner">
-          <span class="live-dot"></span>
-          <strong>Meeting LIVE</strong>
-          <span>This meeting is now live and will be supervised.</span>
-        </div>
-
-        <div class="qa__meta">
-          <span class="qa__number" id="qaNumber">Question 1 of 14</span>
-        </div>
-
-        <div class="qa__card" id="qaCard">
-          <div class="qa__question-row">
-            <div class="qa__q" id="qaQuestion"></div>
-            <button type="button" class="speaker-btn" id="speakQuestionBtn" aria-label="Read this question aloud" title="Read this question aloud">
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path d="M3 9v6h4l5 4V5L7 9H3Zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.06A4.5 4.5 0 0 0 16.5 12Zm-2.5-8.7v2.08A7.5 7.5 0 0 1 18.5 12a7.5 7.5 0 0 1-4.5 6.62v2.08A9.5 9.5 0 0 0 20.5 12 9.5 9.5 0 0 0 14 3.3Z"/>
-              </svg>
-            </button>
-          </div>
-          <div class="qa__hint" id="qaHint"></div>
-        </div>
-
-        <div class="qa__controls">
-          <button type="button" class="qa-btn" id="qaNext">Next question</button>
-        </div>
-
-        <div class="qa__progress" role="progressbar" aria-label="Question progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-          <div class="qa__progress-bar" id="qaProgressBar"></div>
-        </div>
-      </div>
-
-      <div class="qa__footer"><strong>Tip:</strong> Answers should be clear, factual, and supported with examples where possible.</div>
     </section>
 
-    <aside class="cam-float" id="camFloat" aria-label="Camera preview">
-      <div class="cam-float__drag" id="camDrag">
-        <span class="cam__title">Camera preview</span>
-        <span class="cam__status" id="camStatus">Off</span>
+    <section class="start-panel" id="startPanel">
+      <button type="button" id="startBtn" class="start-btn">
+        <span class="start-btn-icon">●</span>
+        Start Meeting
+      </button>
+      <p id="startHelp">Press Start Meeting when all participants are ready.</p>
+    </section>
+
+    <section class="live-strip hidden" id="liveStrip" aria-live="polite">
+      <div class="live-dot"></div>
+      <strong>Meeting On-going</strong>
+      <span>This meeting is now live and will be supervised.</span>
+    </section>
+
+    <section class="qa-panel hidden" id="qaPanel">
+      <div class="qa-header">
+        <div>
+          <h2>Live HR Director Questions</h2>
+          <p>Questions appear one at a time. Use the speaker button to read the current question aloud.</p>
+        </div>
+        <div class="question-count" id="questionCount">Question 1 of 14</div>
       </div>
-      <div class="cam__frame"><video id="camVideo" autoplay playsinline muted></video></div>
-      <p class="cam__note">Local preview only. Camera access requires permission.</p>
-    </aside>
+
+      <div class="question-card">
+        <div class="question-row">
+          <h3 id="questionText"></h3>
+          <button type="button" id="speakBtn" class="speak-btn" aria-label="Read question aloud" title="Read question aloud">🔊</button>
+        </div>
+        <p id="questionHint" class="question-hint"></p>
+      </div>
+
+      <div class="qa-actions">
+        <button type="button" id="nextBtn" class="next-btn">Next question</button>
+      </div>
+
+      <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div id="progressBar"></div>
+      </div>
+
+      <div class="tip"><strong>Tip:</strong> Answers should be clear, factual, and supported with examples where possible.</div>
+    </section>
   </main>
 
-  <footer class="app-footer">
-    <div class="container app-footer__inner">
-      <div class="app-footer__links">
-        <a href="#">Terms</a><a href="#">Privacy</a><a href="#">Accessibility</a><a href="#">Contact</a>
-      </div>
-      <p class="app-footer__note">HR Governance Portal Interface.</p>
-    </div>
+  <footer class="footer">
+    <div class="container">Internal HR Governance Interface</div>
   </footer>
 
   <script>
-    (function () {
-      const startBtn = document.getElementById('startMeetingBtn');
-      const startHint = document.getElementById('startHint');
-      const meetingStatus = document.getElementById('meetingStatus');
-      const meetingTimer = document.getElementById('meetingTimer');
-      const qaPanel = document.getElementById('qaPanel');
-      const liveBanner = document.getElementById('liveBanner');
-      const qaNumber = document.getElementById('qaNumber');
-      const qaQuestion = document.getElementById('qaQuestion');
-      const qaHint = document.getElementById('qaHint');
-      const qaNext = document.getElementById('qaNext');
-      const speakQuestionBtn = document.getElementById('speakQuestionBtn');
-      const qaProgressBar = document.getElementById('qaProgressBar');
-      const qaProgress = document.querySelector('.qa__progress');
-      const camVideo = document.getElementById('camVideo');
-      const camStatus = document.getElementById('camStatus');
+    const questions = [
+      { q: "What are your duties and responsibilities within the company as a Director?", h: "Explain your role clearly and give examples where possible." },
+      { q: "Who reports directly to you and who do you line manage?", h: "Name roles or departments rather than personal details where appropriate." },
+      { q: "Are you aware of any issues, concerns, or challenges faced by employees within the organisation?", h: "Explain how these concerns are brought to your attention." },
+      { q: "Are employee grievances brought directly to you, or are they managed through HR first?", h: "Describe the normal grievance process." },
+      { q: "Do you personally meet employees during grievance meetings, or does HR manage the process on your behalf?", h: "Explain your level of involvement." },
+      { q: "How long have you been acting as Director of the company?", h: "State the approximate date or length of service." },
+      { q: "Were your duties and responsibilities adapted appropriately to accommodate your disability?", h: "Explain any adjustments, support, or delegated responsibilities." },
+      { q: "Do you trust HR to make appropriate decisions regarding employee welfare and workplace concerns?", h: "Explain why and how HR decisions are reviewed." },
+      { q: "Do you believe all employee grievances have been addressed correctly? If yes, please provide an example.", h: "Give a factual example if possible." },
+      { q: "Were you personally involved in decisions relating to grievances raised by employees?", h: "Explain whether decisions were made by you, HR, or management." },
+      { q: "Do you have the final decision-making authority during recruitment, including Skilled Worker recruitment?", h: "Explain how recruitment decisions are approved." },
+      { q: "Is there transparency within the organisation, and are staff members aware of your role and responsibilities? If not, please explain why.", h: "Explain how staff understand reporting lines and decision-making." },
+      { q: "How do you ensure HR decisions are made fairly and in the best interests of employees?", h: "Mention oversight, records, policies, and escalation routes." },
+      { q: "How do you maintain oversight of company operations and ensure managers are carrying out their responsibilities correctly?", h: "Explain supervision, reporting, meetings, audits, or management updates." }
+    ];
 
-      const questions = [
-        { q: 'What are your duties and responsibilities within the company as a Director?', hint: 'Explain your role clearly and give examples where possible.' },
-        { q: 'Who reports directly to you and who do you line manage?', hint: 'Name job roles rather than personal details where possible.' },
-        { q: 'Are you aware of any issues, concerns, or challenges faced by employees within the organisation?', hint: 'Explain how you become aware of staff concerns.' },
-        { q: 'Are employee grievances brought directly to you, or are they managed through HR first?', hint: 'Describe the normal grievance pathway.' },
-        { q: 'Do you personally meet employees during grievance meetings, or does HR manage the process on your behalf?', hint: 'Explain your involvement in grievance meetings.' },
-        { q: 'How long have you been acting as Director of the company?', hint: 'State the approximate start date or duration.' },
-        { q: 'Were your duties and responsibilities adapted appropriately to accommodate your disability?', hint: 'Explain any adjustments or support arrangements.' },
-        { q: 'Do you trust HR to make appropriate decisions regarding employee welfare and workplace concerns?', hint: 'Explain why and how oversight is maintained.' },
-        { q: 'Do you believe all employee grievances have been addressed correctly? If yes, please provide an example.', hint: 'Provide a brief example if possible.' },
-        { q: 'Were you personally involved in decisions relating to grievances raised by employees?', hint: 'Explain the level of involvement and decision-making.' },
-        { q: 'Do you have the final decision-making authority during recruitment, including Skilled Worker recruitment?', hint: 'Explain how recruitment decisions are approved.' },
-        { q: 'Is there transparency within the organisation, and are staff members aware of your role and responsibilities? If not, please explain why.', hint: 'Explain how staff know who is responsible for what.' },
-        { q: 'How do you ensure HR decisions are made fairly and in the best interests of employees?', hint: 'Mention policies, records, meetings or oversight.' },
-        { q: 'How do you maintain oversight of company operations and ensure managers are carrying out their responsibilities correctly?', hint: 'Explain reporting, supervision, audits or reviews.' }
-      ];
+    const startBtn = document.getElementById("startBtn");
+    const startHelp = document.getElementById("startHelp");
+    const startPanel = document.getElementById("startPanel");
+    const liveStrip = document.getElementById("liveStrip");
+    const qaPanel = document.getElementById("qaPanel");
+    const statusEl = document.getElementById("meetingStatus");
+    const timerEl = document.getElementById("meetingTimer");
+    const questionCount = document.getElementById("questionCount");
+    const questionText = document.getElementById("questionText");
+    const questionHint = document.getElementById("questionHint");
+    const speakBtn = document.getElementById("speakBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const progressBar = document.getElementById("progressBar");
+    const progress = document.querySelector(".progress");
 
-      let idx = 0;
-      let camStream = null;
-      let audioCtx = null;
-      let meetingStartMs = 0;
-      let timerId = null;
+    let idx = 0;
+    let timer = null;
+    let startTime = 0;
+    let voicesReady = false;
 
-      function pad2(number) {
-        return String(number).padStart(2, '0');
+    function pad(n){ return String(n).padStart(2, "0"); }
+    function format(ms){ const s = Math.floor(ms/1000); return pad(Math.floor(s/60)) + ":" + pad(s%60); }
+
+    function loadVoices(){
+      if (!('speechSynthesis' in window)) return;
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length) voicesReady = true;
+    }
+    if ('speechSynthesis' in window) {
+      loadVoices();
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    function speak(text){
+      if (!('speechSynthesis' in window)) {
+        alert("Text-to-speech is not supported by this browser.");
+        return;
       }
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-GB";
+      utterance.rate = 0.92;
+      utterance.pitch = 1;
+      utterance.volume = 1;
+      const voices = window.speechSynthesis.getVoices();
+      const preferred = voices.find(v => v.lang === "en-GB") || voices.find(v => v.lang && v.lang.startsWith("en"));
+      if (preferred) utterance.voice = preferred;
+      setTimeout(() => window.speechSynthesis.speak(utterance), 80);
+    }
 
-      function updateTimer() {
-        const seconds = Math.floor((Date.now() - meetingStartMs) / 1000);
-        const minutes = Math.floor(seconds / 60);
-        meetingTimer.textContent = pad2(minutes) + ':' + pad2(seconds % 60);
-      }
-
-      function unlockAudio() {
-        try {
-          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-          if (AudioContextClass && !audioCtx) audioCtx = new AudioContextClass();
-          if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-        } catch (e) {}
-
-        if ('speechSynthesis' in window) {
-          window.speechSynthesis.cancel();
-          // Helps some browsers initialise voices after a user click.
-          window.speechSynthesis.getVoices();
-        }
-      }
-
-      function playStartTone() {
-        try {
-          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-          if (!audioCtx && AudioContextClass) audioCtx = new AudioContextClass();
-          if (!audioCtx) return;
-          if (audioCtx.state === 'suspended') audioCtx.resume();
-
-          const now = audioCtx.currentTime;
-          const notes = [660, 880, 1175];
-          notes.forEach(function (frequency, i) {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(frequency, now + i * 0.13);
-            gain.gain.setValueAtTime(0.0001, now + i * 0.13);
-            gain.gain.exponentialRampToValueAtTime(0.08, now + i * 0.13 + 0.02);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.13 + 0.16);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start(now + i * 0.13);
-            osc.stop(now + i * 0.13 + 0.18);
-          });
-        } catch (e) {}
-      }
-
-      function speak(text) {
-        if (!('speechSynthesis' in window)) {
-          alert('Read aloud is not supported by this browser. Try Chrome, Edge or Safari.');
-          return;
-        }
-
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'en-GB';
-        utterance.rate = 0.88;
-        utterance.pitch = 1;
-        utterance.volume = 1;
-
-        const voices = window.speechSynthesis.getVoices();
-        const britishVoice = voices.find(function (voice) {
-          return voice.lang && voice.lang.toLowerCase().startsWith('en-gb');
+    function startTone(){
+      try {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        const ctx = new Ctx();
+        const now = ctx.currentTime;
+        [660, 880, 1175].forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(freq, now + i * 0.13);
+          gain.gain.setValueAtTime(0.0001, now + i * 0.13);
+          gain.gain.exponentialRampToValueAtTime(0.08, now + i * 0.13 + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.13 + 0.15);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + i * 0.13);
+          osc.stop(now + i * 0.13 + 0.17);
         });
-        if (britishVoice) utterance.voice = britishVoice;
+        setTimeout(() => ctx.close(), 850);
+      } catch(e) {}
+    }
 
-        window.speechSynthesis.speak(utterance);
+    function renderQuestion(){
+      const current = questions[idx];
+      questionCount.textContent = "Question " + (idx + 1) + " of " + questions.length;
+      questionText.textContent = current.q;
+      questionHint.textContent = current.h;
+      const pct = Math.round(((idx + 1) / questions.length) * 100);
+      progressBar.style.width = pct + "%";
+      progress.setAttribute("aria-valuenow", String(pct));
+      nextBtn.textContent = idx === questions.length - 1 ? "Finish questions" : "Next question";
+    }
 
-        // Chrome sometimes pauses speech synthesis on longer sessions; this keeps it alive.
-        setTimeout(function () {
-          if (window.speechSynthesis.paused) window.speechSynthesis.resume();
-        }, 250);
+    startBtn.addEventListener("click", () => {
+      startBtn.disabled = true;
+      startBtn.innerHTML = '<span class="start-btn-icon pulse">●</span> Starting meeting...';
+      startHelp.textContent = "Activating meeting mode. Please wait...";
+      statusEl.textContent = "Starting";
+      statusEl.className = "session-status starting";
+      startTone();
+
+      setTimeout(() => {
+        statusEl.textContent = "Meeting On-going";
+        statusEl.className = "session-status live";
+        startPanel.classList.add("hidden");
+        liveStrip.classList.remove("hidden");
+        qaPanel.classList.remove("hidden");
+        idx = 0;
+        renderQuestion();
+        startTime = Date.now();
+        timer = setInterval(() => timerEl.textContent = format(Date.now() - startTime), 500);
+        startTone();
+        speak("This meeting is now LIVE and will be supervised.");
+      }, 2500);
+    });
+
+    speakBtn.addEventListener("click", () => {
+      speak(questions[idx].q);
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (idx < questions.length - 1) {
+        idx++;
+        renderQuestion();
+      } else {
+        questionCount.textContent = "Completed";
+        questionText.textContent = "Questions completed.";
+        questionHint.textContent = "You may now continue with any additional HR meeting notes or close the meeting record.";
+        speakBtn.style.display = "none";
+        nextBtn.disabled = true;
+        nextBtn.textContent = "Finished";
+        progressBar.style.width = "100%";
       }
-
-      function renderQuestion() {
-        const current = questions[idx];
-        const number = idx + 1;
-        const total = questions.length;
-        qaNumber.textContent = 'Question ' + number + ' of ' + total;
-        qaQuestion.textContent = current.q;
-        qaHint.textContent = current.hint || '';
-        const pct = Math.round((number / total) * 100);
-        qaProgressBar.style.width = pct + '%';
-        qaProgress.setAttribute('aria-valuenow', String(pct));
-        qaNext.textContent = idx === total - 1 ? 'Finish questions' : 'Next question';
-      }
-
-      async function startCamera() {
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-          camStatus.textContent = 'Unavailable';
-          return;
-        }
-        try {
-          camStream = await navigator.mediaDevices.getUserMedia({
-            video: { width: 640, height: 480, facingMode: 'user' },
-            audio: false
-          });
-          camVideo.srcObject = camStream;
-          camStatus.textContent = 'On';
-          camStatus.classList.add('cam__status--on');
-        } catch (e) {
-          camStatus.textContent = 'Blocked';
-        }
-      }
-
-      startBtn.addEventListener('click', function () {
-        unlockAudio();
-        startBtn.disabled = true;
-        startBtn.textContent = 'Starting...';
-        startHint.textContent = 'Preparing live meeting mode...';
-        startCamera();
-
-        setTimeout(function () {
-          startBtn.classList.add('start-meeting-btn--hidden');
-          meetingStatus.classList.remove('meeting-status--hidden');
-          startHint.textContent = 'Meeting is active. Use Next question to continue.';
-          qaPanel.classList.remove('qa--locked');
-          liveBanner.classList.remove('live-banner--hidden');
-          renderQuestion();
-          meetingStartMs = Date.now();
-          updateTimer();
-          timerId = setInterval(updateTimer, 1000);
-          playStartTone();
-          speak('This meeting is now LIVE and will be supervised.');
-        }, 2500);
-      });
-
-      speakQuestionBtn.addEventListener('click', function () {
-        unlockAudio();
-        speak(questions[idx].q);
-      });
-
-      qaNext.addEventListener('click', function () {
-        if (idx < questions.length - 1) {
-          idx++;
-          renderQuestion();
-        } else {
-          qaQuestion.textContent = 'Questions completed. You may now continue with the standard HR meeting discussion.';
-          qaHint.textContent = '';
-          qaNumber.textContent = 'Completed';
-          speakQuestionBtn.style.display = 'none';
-          qaNext.disabled = true;
-          qaNext.textContent = 'Finished';
-          qaProgressBar.style.width = '100%';
-          qaProgress.setAttribute('aria-valuenow', '100');
-        }
-      });
-
-      renderQuestion();
-    })();
+    });
   </script>
 </body>
 </html>
