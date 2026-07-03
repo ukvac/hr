@@ -3,49 +3,46 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HR Director Meeting Portal</title>
+  <title>HR Director Meeting</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header class="app-header" role="banner">
+  <header class="app-header">
     <div class="container app-header__inner">
-      <div class="app-header__left"><span class="app-header__brand">HR Governance Portal</span></div>
+      <div class="app-header__brand">HR Governance Portal</div>
       <div class="app-header__center">Director HR Meeting</div>
-      <div class="app-header__right">Subject - <strong>Company Director</strong></div>
+      <div class="app-header__right">Internal HR Record</div>
     </div>
   </header>
 
-  <main class="container" role="main">
-    <div class="phase-banner">
-      <strong class="phase-banner__tag">SECURE</strong>
-      <span class="phase-banner__text">Internal HR governance meeting interface. Compliance review mode available.</span>
+  <main class="container">
+    <section class="service-name">
+      <div class="service-name__box">
+        <strong class="service-name__text">Director HR Meeting Record</strong>
+      </div>
+    </section>
+
+    <h1>Director HR meeting.</h1>
+    <h2 class="section-heading">Duties, HR oversight, grievances and workplace welfare.</h2>
+
+    <div class="summary">
+      <div class="summary__row">
+        <div class="summary__key">Meeting type</div>
+        <div class="summary__value">Director HR governance review</div>
+      </div>
+      <div class="summary__divider"></div>
+      <div class="summary__row">
+        <div class="summary__key">Purpose</div>
+        <div class="summary__value">Review of director duties, HR oversight, grievances, recruitment authority, transparency and workplace welfare.</div>
+      </div>
+      <div class="summary__divider"></div>
+      <div class="summary__row">
+        <div class="summary__key">Notice</div>
+        <div class="summary__value">This is an internal HR record. It does not create a live connection to UKVI, ACAS, or any external authority.</div>
+      </div>
     </div>
 
-    <section class="hero">
-      <div>
-        <p class="eyebrow">Director Review Session</p>
-        <h1>HR governance meeting.</h1>
-        <p class="hero__text">Structured meeting flow with live question prompts, voice read-out, camera preview, timer and compliance review indicators.</p>
-      </div>
-      <div class="status-orb" aria-hidden="true"><span></span></div>
-    </section>
-
-    <section class="system-grid" aria-label="Meeting status dashboard">
-      <div class="system-card"><span class="system-card__label">Session status</span><strong id="meetingState">Not started</strong></div>
-      <div class="system-card"><span class="system-card__label">Live timer</span><strong id="recTimer">00:00</strong></div>
-      <div class="system-card"><span class="system-card__label">Review mode</span><strong id="reviewState">Standby</strong></div>
-      <div class="system-card"><span class="system-card__label">Session ID</span><strong id="sessionId">HR-000000</strong></div>
-    </section>
-
-    <section class="summary" aria-label="Meeting summary">
-      <div class="summary__row"><div class="summary__key">Meeting type</div><div class="summary__value">Director HR Governance Meeting</div></div>
-      <div class="summary__divider"></div>
-      <div class="summary__row"><div class="summary__key">Purpose</div><div class="summary__value">Review of director duties, HR oversight, grievances, recruitment authority, transparency and workplace welfare.</div></div>
-      <div class="summary__divider"></div>
-      <div class="summary__row"><div class="summary__key">Notice</div><div class="summary__value">This is an internal HR record. It does not create a live connection to UKVI, ACAS, or any external authority.</div></div>
-    </section>
-
-    <div class="warning" role="note">
+    <div class="warning">
       <div class="warning__icon">!</div>
       <div>
         <h3 class="warning__title">Before you continue</h3>
@@ -53,195 +50,172 @@
       </div>
     </div>
 
-    <section class="qa" aria-label="Live HR meeting questions">
+    <section class="meeting-start" id="meetingStartPanel">
+      <button type="button" id="startMeetingBtn" class="start-meeting-btn">Start Meeting</button>
+      <p class="meeting-start__hint">Press Start Meeting when all participants are ready.</p>
+    </section>
+
+    <section class="qa qa--locked" id="qaPanel" aria-label="Live HR director questions">
       <div class="qa__header">
-        <div>
-          <h3 class="qa__title">Live HR Director Questions</h3>
-          <p class="qa__subtitle">Press Start Meeting. After activation, the first question appears and can be read aloud.</p>
-        </div>
-        <span class="qa__liveBadge" id="qaLiveBadge"><span class="qa__liveDot"></span> LIVE</span>
+        <h3 class="qa__title">Live HR Director Questions</h3>
+        <p class="qa__subtitle">Questions appear one at a time. Use the speaker button beside each question to read it aloud.</p>
       </div>
 
       <div class="qa__body">
-        <div class="activation activation--hidden" id="activationPanel">
-          <div class="activation__scan"></div>
-          <strong id="activationText">Activating secure meeting mode...</strong>
-        </div>
-
-        <div class="review-banner review-banner--hidden" id="reviewBanner">
-          <div class="review-banner__icon">◆</div>
-          <div class="review-banner__track"><span class="review-banner__text">Compliance review mode active: UKVI and ACAS reference supervision indicators enabled for internal HR monitoring.</span></div>
+        <div class="live-banner live-banner--hidden" id="liveBanner">
+          <span class="live-dot"></span>
+          <strong>Meeting LIVE</strong>
+          <span>This meeting is now live and will be supervised.</span>
         </div>
 
         <div class="qa__meta">
-          <span class="qa__number" id="qaNumber">Start the meeting to reveal questions.</span>
+          <span class="qa__number" id="qaNumber">Question 1</span>
         </div>
 
-        <div class="qa__card qa__card--hidden" id="qaCard">
-          <div class="qa__q" id="qaQuestion"></div>
+        <div class="qa__card" id="qaCard">
+          <div class="qa__question-row">
+            <div class="qa__q" id="qaQuestion"></div>
+            <button type="button" class="speaker-btn" id="speakQuestionBtn" aria-label="Read question aloud" title="Read question aloud">🔊</button>
+          </div>
           <div class="qa__hint" id="qaHint"></div>
         </div>
 
-        <div class="qa__controls qa__controls--hidden" id="qaControls">
-          <button type="button" class="qa-btn qa-btn--secondary" id="readQuestion">Read question aloud</button>
+        <div class="qa__controls">
           <button type="button" class="qa-btn" id="qaNext">Next question</button>
-          <button type="button" class="qa-btn qa-btn--ghost" id="repeatNotice">Repeat live notice</button>
         </div>
 
-        <div class="qa__progress"><div class="qa__progress-bar" id="qaProgressBar"></div></div>
-        <p class="qa__lockNote" id="qaLockNote">Questions are locked until the meeting starts.</p>
+        <div class="qa__progress" role="progressbar" aria-label="Question progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div class="qa__progress-bar" id="qaProgressBar"></div>
+        </div>
       </div>
 
       <div class="qa__footer"><strong>Tip:</strong> Answers should be clear, factual, and supported with examples where possible.</div>
     </section>
 
-    <section class="actions">
-      <div class="recording-panel">
-        <div class="recording-panel__badge"><span class="recording-badge">MEETING</span><span class="recording-panel__title">Meeting control</span></div>
-        <p class="recording-panel__text">Start the meeting when ready. The live question panel will unlock after a short activation sequence.</p>
+    <aside class="cam-float" id="camFloat" aria-label="Camera preview">
+      <div class="cam-float__drag" id="camDrag">
+        <span class="cam__title">Camera preview</span>
+        <span class="cam__status" id="camStatus">Off</span>
       </div>
-
-      <div class="consent">
-        <label class="consent__label">
-          <input type="checkbox" id="consentCheck" class="consent__checkbox" />
-          <span class="consent__text">I confirm all participants have been informed that this HR governance meeting may be recorded and reviewed internally.</span>
-        </label>
-        <p class="consent__hint" id="consentHint">Consent must be confirmed before the meeting can start.</p>
-      </div>
-
-      <div class="recording-controls">
-        <button type="button" id="startMeeting" class="rec-toggle rec-toggle--off" disabled>
-          <span class="rec-dot"><svg class="rec-mic" viewBox="0 0 24 24"><path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Zm5-3a1 1 0 1 0-2 0 3 3 0 0 1-6 0 1 1 0 1 0-2 0 5 5 0 0 0 4 4.9V18H9a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-2.1A5 5 0 0 0 17 11Z"/></svg></span>
-          <span id="startMeetingText">Start meeting</span>
-        </button>
-        <button type="button" id="endMeeting" class="end-btn" disabled>End meeting</button>
-      </div>
-    </section>
+      <div class="cam__frame"><video id="camVideo" autoplay playsinline muted></video></div>
+      <p class="cam__note">Local preview only. Camera access requires permission.</p>
+    </aside>
   </main>
 
-  <aside class="cam-float" id="camFloat">
-    <div class="cam-float__drag" id="camDrag"><span class="cam__title">Camera preview</span><span class="cam__status" id="camStatus">Off</span></div>
-    <div class="cam__frame"><video id="camVideo" autoplay playsinline muted></video></div>
-    <p class="cam__note">Local preview only. Browser permission is required.</p>
-  </aside>
-
-  <footer class="app-footer"><div class="container app-footer__inner"><p class="app-footer__note">Internal HR Governance Portal Interface.</p></div></footer>
+  <footer class="app-footer">
+    <div class="container app-footer__inner">
+      <div class="app-footer__links">
+        <a href="#">Terms</a><a href="#">Privacy</a><a href="#">Accessibility</a><a href="#">Contact</a>
+      </div>
+      <p class="app-footer__note">HR Governance Portal Interface.</p>
+    </div>
+  </footer>
 
   <script>
-    (function(){
-      const consentCheck = document.getElementById('consentCheck');
-      const consentHint = document.getElementById('consentHint');
-      const startMeeting = document.getElementById('startMeeting');
-      const startMeetingText = document.getElementById('startMeetingText');
-      const endMeeting = document.getElementById('endMeeting');
-      const meetingState = document.getElementById('meetingState');
-      const reviewState = document.getElementById('reviewState');
-      const sessionId = document.getElementById('sessionId');
-      const timerEl = document.getElementById('recTimer');
-      const activationPanel = document.getElementById('activationPanel');
-      const activationText = document.getElementById('activationText');
-      const reviewBanner = document.getElementById('reviewBanner');
-      const qaLiveBadge = document.getElementById('qaLiveBadge');
-      const qaCard = document.getElementById('qaCard');
+    (function () {
+      const startBtn = document.getElementById('startMeetingBtn');
+      const startPanel = document.getElementById('meetingStartPanel');
+      const qaPanel = document.getElementById('qaPanel');
+      const liveBanner = document.getElementById('liveBanner');
+      const qaNumber = document.getElementById('qaNumber');
       const qaQuestion = document.getElementById('qaQuestion');
       const qaHint = document.getElementById('qaHint');
-      const qaNumber = document.getElementById('qaNumber');
-      const qaControls = document.getElementById('qaControls');
-      const qaProgressBar = document.getElementById('qaProgressBar');
-      const qaLockNote = document.getElementById('qaLockNote');
       const qaNext = document.getElementById('qaNext');
-      const readQuestion = document.getElementById('readQuestion');
-      const repeatNotice = document.getElementById('repeatNotice');
+      const speakQuestionBtn = document.getElementById('speakQuestionBtn');
+      const qaProgressBar = document.getElementById('qaProgressBar');
+      const qaProgress = document.querySelector('.qa__progress');
       const camVideo = document.getElementById('camVideo');
       const camStatus = document.getElementById('camStatus');
-      const camFloat = document.getElementById('camFloat');
-      const camDrag = document.getElementById('camDrag');
 
       const questions = [
-        {q:'What are your duties and responsibilities within the company as a Director?', hint:'Explain your practical role, decision-making responsibilities and day-to-day involvement.'},
-        {q:'Who reports directly to you and who do you line manage?', hint:'Identify the roles that report to you and explain how oversight is maintained.'},
-        {q:'Are you aware of any issues, concerns, or challenges faced by employees within the organisation?', hint:'Give examples where appropriate and explain how you are made aware.'},
-        {q:'Are employee grievances brought directly to you, or are they managed through HR first?', hint:'Explain the grievance pathway used by the company.'},
-        {q:'Do you personally meet employees during grievance meetings, or does HR manage the process on your behalf?', hint:'Explain your level of involvement in formal and informal grievance meetings.'},
-        {q:'How long have you been acting as Director of the company?', hint:'State the period and describe whether your responsibilities have changed over time.'},
-        {q:'Were your duties and responsibilities adapted appropriately to accommodate your disability?', hint:'Explain any adjustments, support, delegation or communication arrangements.'},
-        {q:'Do you trust HR to make appropriate decisions regarding employee welfare and workplace concerns?', hint:'Explain why and how HR decisions are checked or reviewed.'},
-        {q:'Do you believe all employee grievances have been addressed correctly? If yes, please provide an example.', hint:'Give a clear example without sharing unnecessary personal information.'},
-        {q:'Were you personally involved in decisions relating to grievances raised by employees?', hint:'Explain whether you reviewed, approved, delegated or made final decisions.'},
-        {q:'Do you have the final decision-making authority during recruitment, including Skilled Worker recruitment?', hint:'Explain who screens, interviews, approves and issues final recruitment decisions.'},
-        {q:'Is there transparency within the organisation, and are staff members aware of your role and responsibilities? If not, please explain why.', hint:'Explain how staff are informed about management structure and escalation routes.'},
-        {q:'How do you ensure HR decisions are made fairly and in the best interests of employees?', hint:'Mention policies, records, oversight, welfare checks and decision reviews.'},
-        {q:'How do you maintain oversight of company operations and ensure managers are carrying out their responsibilities correctly?', hint:'Explain reporting, meetings, audits, supervision and management updates.'}
+        { q: 'What are your duties and responsibilities within the company as a Director?', hint: 'Explain your role clearly and give examples where possible.' },
+        { q: 'Who reports directly to you and who do you line manage?', hint: 'Name job roles rather than personal details where possible.' },
+        { q: 'Are you aware of any issues, concerns, or challenges faced by employees within the organisation?', hint: 'Explain how you become aware of staff concerns.' },
+        { q: 'Are employee grievances brought directly to you, or are they managed through HR first?', hint: 'Describe the normal grievance pathway.' },
+        { q: 'Do you personally meet employees during grievance meetings, or does HR manage the process on your behalf?', hint: 'Explain your involvement in grievance meetings.' },
+        { q: 'How long have you been acting as Director of the company?', hint: 'State the approximate start date or duration.' },
+        { q: 'Were your duties and responsibilities adapted appropriately to accommodate your disability?', hint: 'Explain any adjustments or support arrangements.' },
+        { q: 'Do you trust HR to make appropriate decisions regarding employee welfare and workplace concerns?', hint: 'Explain why and how oversight is maintained.' },
+        { q: 'Do you believe all employee grievances have been addressed correctly? If yes, please provide an example.', hint: 'Provide a brief example if possible.' },
+        { q: 'Were you personally involved in decisions relating to grievances raised by employees?', hint: 'Explain the level of involvement and decision-making.' },
+        { q: 'Do you have the final decision-making authority during recruitment, including Skilled Worker recruitment?', hint: 'Explain how recruitment decisions are approved.' },
+        { q: 'Is there transparency within the organisation, and are staff members aware of your role and responsibilities? If not, please explain why.', hint: 'Explain how staff know who is responsible for what.' },
+        { q: 'How do you ensure HR decisions are made fairly and in the best interests of employees?', hint: 'Mention policies, records, meetings or oversight.' },
+        { q: 'How do you maintain oversight of company operations and ensure managers are carrying out their responsibilities correctly?', hint: 'Explain reporting, supervision, audits or reviews.' }
       ];
 
-      let idx = 0, started = false, timerId = null, startTime = 0, camStream = null;
-      sessionId.textContent = 'HR-' + Math.floor(100000 + Math.random()*900000);
+      let idx = 0;
+      let camStream = null;
 
-      function pad(n){ return String(n).padStart(2,'0'); }
-      function tick(){ const s = Math.floor((Date.now()-startTime)/1000); timerEl.textContent = pad(Math.floor(s/60)) + ':' + pad(s%60); }
-      function speak(text){
+      function speak(text) {
         if (!('speechSynthesis' in window)) return;
         window.speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(text);
-        u.rate = 0.92; u.pitch = 1; u.lang = 'en-GB';
-        window.speechSynthesis.speak(u);
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-GB';
+        utterance.rate = 0.92;
+        utterance.pitch = 1;
+        window.speechSynthesis.speak(utterance);
       }
-      function liveNotice(){ speak('This meeting is now live. UKVI and ACAS compliance review mode is active for internal HR monitoring.'); }
-      function renderQuestion(){
-        const total = questions.length, current = questions[idx];
-        qaNumber.textContent = 'Question ' + (idx+1) + ' of ' + total;
+
+      function renderQuestion() {
+        const current = questions[idx];
+        const number = idx + 1;
+        const total = questions.length;
+        qaNumber.textContent = 'Question ' + number + ' of ' + total;
         qaQuestion.textContent = current.q;
-        qaHint.textContent = current.hint;
-        qaProgressBar.style.width = Math.round(((idx+1)/total)*100) + '%';
+        qaHint.textContent = current.hint || '';
+        const pct = Math.round((number / total) * 100);
+        qaProgressBar.style.width = pct + '%';
+        qaProgress.setAttribute('aria-valuenow', String(pct));
         qaNext.textContent = idx === total - 1 ? 'Finish questions' : 'Next question';
       }
-      async function startCamera(){
-        try{
-          camStream = await navigator.mediaDevices.getUserMedia({video:{width:640,height:480,facingMode:'user'},audio:false});
-          camVideo.srcObject = camStream; camStatus.textContent='On'; camStatus.classList.add('cam__status--on');
-        }catch(e){ camStatus.textContent='Blocked'; }
+
+      async function startCamera() {
+        try {
+          camStream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480, facingMode: 'user' }, audio: false });
+          camVideo.srcObject = camStream;
+          camStatus.textContent = 'On';
+          camStatus.classList.add('cam__status--on');
+        } catch (e) {
+          camStatus.textContent = 'Blocked';
+        }
       }
-      function stopCamera(){ if(camStream){ camStream.getTracks().forEach(t=>t.stop()); camStream=null; } camVideo.srcObject=null; camStatus.textContent='Off'; camStatus.classList.remove('cam__status--on'); }
 
-      consentCheck.addEventListener('change', function(){
-        startMeeting.disabled = !consentCheck.checked || started;
-        consentHint.textContent = consentCheck.checked ? 'Consent confirmed. You can now start the meeting.' : 'Consent must be confirmed before the meeting can start.';
-      });
-
-      startMeeting.addEventListener('click', async function(){
-        if(!consentCheck.checked || started) return;
-        started = true;
-        startMeeting.disabled = true; startMeetingText.textContent = 'Activating...';
-        meetingState.textContent = 'Activating'; reviewState.textContent = 'Connecting';
-        activationPanel.classList.remove('activation--hidden');
-        activationText.textContent = 'Activating secure meeting mode...';
+      startBtn.addEventListener('click', async function () {
+        startBtn.disabled = true;
+        startBtn.textContent = 'Starting...';
         await startCamera();
-        setTimeout(function(){
-          meetingState.textContent = 'Live'; reviewState.textContent = 'Active';
-          activationText.textContent = 'Meeting live. Review indicators active.';
-          reviewBanner.classList.remove('review-banner--hidden'); qaLiveBadge.style.display = 'inline-flex';
-          qaCard.classList.remove('qa__card--hidden'); qaControls.classList.remove('qa__controls--hidden'); qaLockNote.style.display='none';
-          startMeeting.classList.remove('rec-toggle--off'); startMeetingText.textContent='Meeting live'; endMeeting.disabled=false;
-          startTime = Date.now(); timerId = setInterval(tick, 250); tick();
-          idx = 0; renderQuestion(); liveNotice();
+
+        setTimeout(function () {
+          startPanel.classList.add('meeting-start--hidden');
+          qaPanel.classList.remove('qa--locked');
+          liveBanner.classList.remove('live-banner--hidden');
+          renderQuestion();
+          speak('This meeting is now LIVE and will be supervised.');
         }, 3000);
       });
 
-      readQuestion.addEventListener('click', function(){ speak(qaQuestion.textContent); });
-      repeatNotice.addEventListener('click', liveNotice);
-      qaNext.addEventListener('click', function(){
-        if(idx < questions.length - 1){ idx++; renderQuestion(); speak(qaQuestion.textContent); }
-        else { qaNumber.textContent='Completed'; qaQuestion.textContent='All HR Director questions have been completed.'; qaHint.textContent='You may now continue with any additional company-specific HR discussion.'; qaNext.disabled=true; qaProgressBar.style.width='100%'; speak('All HR Director questions have been completed.'); }
-      });
-      endMeeting.addEventListener('click', function(){
-        started = false; clearInterval(timerId); timerId=null; stopCamera(); window.speechSynthesis && window.speechSynthesis.cancel();
-        meetingState.textContent='Ended'; reviewState.textContent='Closed'; startMeetingText.textContent='Meeting ended'; endMeeting.disabled=true; qaControls.classList.add('qa__controls--hidden');
+      speakQuestionBtn.addEventListener('click', function () {
+        speak(questions[idx].q);
       });
 
-      let dragging=false, ox=0, oy=0;
-      camDrag.addEventListener('mousedown', e=>{ if(innerWidth<=1199)return; dragging=true; const r=camFloat.getBoundingClientRect(); ox=e.clientX-r.left; oy=e.clientY-r.top; });
-      document.addEventListener('mousemove', e=>{ if(!dragging)return; camFloat.style.left=(e.clientX-ox)+'px'; camFloat.style.top=(e.clientY-oy)+'px'; camFloat.style.right='auto'; });
-      document.addEventListener('mouseup', ()=>dragging=false);
+      qaNext.addEventListener('click', function () {
+        if (idx < questions.length - 1) {
+          idx++;
+          renderQuestion();
+        } else {
+          qaQuestion.textContent = 'Questions completed. You may now continue with the standard HR meeting discussion.';
+          qaHint.textContent = '';
+          qaNumber.textContent = 'Completed';
+          speakQuestionBtn.style.display = 'none';
+          qaNext.disabled = true;
+          qaNext.textContent = 'Finished';
+          qaProgressBar.style.width = '100%';
+          qaProgress.setAttribute('aria-valuenow', '100');
+        }
+      });
+
+      renderQuestion();
     })();
   </script>
 </body>
