@@ -50,15 +50,20 @@
       </div>
     </div>
 
-    <section class="meeting-start" id="meetingStartPanel">
+    <section class="meeting-start" id="meetingStartPanel" aria-label="Start meeting control">
       <button type="button" id="startMeetingBtn" class="start-meeting-btn">Start Meeting</button>
-      <p class="meeting-start__hint">Press Start Meeting when all participants are ready.</p>
+      <div class="meeting-status meeting-status--hidden" id="meetingStatus" aria-live="polite">
+        <span class="meeting-status__dot"></span>
+        <strong>Meeting On-going</strong>
+        <span id="meetingTimer">00:00</span>
+      </div>
+      <p class="meeting-start__hint" id="startHint">Press Start Meeting when all participants are ready.</p>
     </section>
 
     <section class="qa qa--locked" id="qaPanel" aria-label="Live HR director questions">
       <div class="qa__header">
         <h3 class="qa__title">Live HR Director Questions</h3>
-        <p class="qa__subtitle">Questions appear one at a time. Use the speaker button beside each question to read it aloud.</p>
+        <p class="qa__subtitle">Questions appear one at a time. Press the speaker icon beside the question to read it aloud.</p>
       </div>
 
       <div class="qa__body">
@@ -69,13 +74,17 @@
         </div>
 
         <div class="qa__meta">
-          <span class="qa__number" id="qaNumber">Question 1</span>
+          <span class="qa__number" id="qaNumber">Question 1 of 14</span>
         </div>
 
         <div class="qa__card" id="qaCard">
           <div class="qa__question-row">
             <div class="qa__q" id="qaQuestion"></div>
-            <button type="button" class="speaker-btn" id="speakQuestionBtn" aria-label="Read question aloud" title="Read question aloud">🔊</button>
+            <button type="button" class="speaker-btn" id="speakQuestionBtn" aria-label="Read this question aloud" title="Read this question aloud">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M3 9v6h4l5 4V5L7 9H3Zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.06A4.5 4.5 0 0 0 16.5 12Zm-2.5-8.7v2.08A7.5 7.5 0 0 1 18.5 12a7.5 7.5 0 0 1-4.5 6.62v2.08A9.5 9.5 0 0 0 20.5 12 9.5 9.5 0 0 0 14 3.3Z"/>
+              </svg>
+            </button>
           </div>
           <div class="qa__hint" id="qaHint"></div>
         </div>
@@ -114,7 +123,9 @@
   <script>
     (function () {
       const startBtn = document.getElementById('startMeetingBtn');
-      const startPanel = document.getElementById('meetingStartPanel');
+      const startHint = document.getElementById('startHint');
+      const meetingStatus = document.getElementById('meetingStatus');
+      const meetingTimer = document.getElementById('meetingTimer');
       const qaPanel = document.getElementById('qaPanel');
       const liveBanner = document.getElementById('liveBanner');
       const qaNumber = document.getElementById('qaNumber');
@@ -146,15 +157,84 @@
 
       let idx = 0;
       let camStream = null;
+      let audioCtx = null;
+      let meetingStartMs = 0;
+      let timerId = null;
+
+      function pad2(number) {
+        return String(number).padStart(2, '0');
+      }
+
+      function updateTimer() {
+        const seconds = Math.floor((Date.now() - meetingStartMs) / 1000);
+        const minutes = Math.floor(seconds / 60);
+        meetingTimer.textContent = pad2(minutes) + ':' + pad2(seconds % 60);
+      }
+
+      function unlockAudio() {
+        try {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioContextClass && !audioCtx) audioCtx = new AudioContextClass();
+          if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+        } catch (e) {}
+
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+          // Helps some browsers initialise voices after a user click.
+          window.speechSynthesis.getVoices();
+        }
+      }
+
+      function playStartTone() {
+        try {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (!audioCtx && AudioContextClass) audioCtx = new AudioContextClass();
+          if (!audioCtx) return;
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+
+          const now = audioCtx.currentTime;
+          const notes = [660, 880, 1175];
+          notes.forEach(function (frequency, i) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(frequency, now + i * 0.13);
+            gain.gain.setValueAtTime(0.0001, now + i * 0.13);
+            gain.gain.exponentialRampToValueAtTime(0.08, now + i * 0.13 + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.13 + 0.16);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now + i * 0.13);
+            osc.stop(now + i * 0.13 + 0.18);
+          });
+        } catch (e) {}
+      }
 
       function speak(text) {
-        if (!('speechSynthesis' in window)) return;
+        if (!('speechSynthesis' in window)) {
+          alert('Read aloud is not supported by this browser. Try Chrome, Edge or Safari.');
+          return;
+        }
+
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'en-GB';
-        utterance.rate = 0.92;
+        utterance.rate = 0.88;
         utterance.pitch = 1;
+        utterance.volume = 1;
+
+        const voices = window.speechSynthesis.getVoices();
+        const britishVoice = voices.find(function (voice) {
+          return voice.lang && voice.lang.toLowerCase().startsWith('en-gb');
+        });
+        if (britishVoice) utterance.voice = britishVoice;
+
         window.speechSynthesis.speak(utterance);
+
+        // Chrome sometimes pauses speech synthesis on longer sessions; this keeps it alive.
+        setTimeout(function () {
+          if (window.speechSynthesis.paused) window.speechSynthesis.resume();
+        }, 250);
       }
 
       function renderQuestion() {
@@ -171,8 +251,15 @@
       }
 
       async function startCamera() {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          camStatus.textContent = 'Unavailable';
+          return;
+        }
         try {
-          camStream = await navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480, facingMode: 'user' }, audio: false });
+          camStream = await navigator.mediaDevices.getUserMedia({
+            video: { width: 640, height: 480, facingMode: 'user' },
+            audio: false
+          });
           camVideo.srcObject = camStream;
           camStatus.textContent = 'On';
           camStatus.classList.add('cam__status--on');
@@ -181,21 +268,30 @@
         }
       }
 
-      startBtn.addEventListener('click', async function () {
+      startBtn.addEventListener('click', function () {
+        unlockAudio();
         startBtn.disabled = true;
         startBtn.textContent = 'Starting...';
-        await startCamera();
+        startHint.textContent = 'Preparing live meeting mode...';
+        startCamera();
 
         setTimeout(function () {
-          startPanel.classList.add('meeting-start--hidden');
+          startBtn.classList.add('start-meeting-btn--hidden');
+          meetingStatus.classList.remove('meeting-status--hidden');
+          startHint.textContent = 'Meeting is active. Use Next question to continue.';
           qaPanel.classList.remove('qa--locked');
           liveBanner.classList.remove('live-banner--hidden');
           renderQuestion();
+          meetingStartMs = Date.now();
+          updateTimer();
+          timerId = setInterval(updateTimer, 1000);
+          playStartTone();
           speak('This meeting is now LIVE and will be supervised.');
-        }, 3000);
+        }, 2500);
       });
 
       speakQuestionBtn.addEventListener('click', function () {
+        unlockAudio();
         speak(questions[idx].q);
       });
 
